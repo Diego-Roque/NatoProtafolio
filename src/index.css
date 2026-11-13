@@ -1,0 +1,146 @@
+@import 'tailwindcss';
+
+/*
+  Sistema visual NATO
+  - Tema fijo oscuro: toda la identidad vive sobre negro de fotocopia.
+  - Un solo acento: violeta Plastilina (sale de las portadas de 90 Segundos).
+  - Regla de forma: todo con esquinas rectas (radio 0). Única excepción
+    documentada: la nav flotante y los botones son píldora.
+*/
+@theme {
+  --color-ink: #0e0d10;
+  --color-ink-2: #17151b;
+  --color-ink-3: #221f28;
+  --color-paper: #ece9e2;
+  --color-paper-dim: #b9b5ad;
+  --color-mute: #8a8690;
+  --color-violet: #9b7bff;
+  --color-violet-deep: #6c4fe0;
+
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    scroll-behavior: smooth;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-ink);
+    font-family: var(--font-sans);
+    font-stretch: 100%;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-violet);
+    color: var(--color-ink);
+  }
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Titulares: ancho expandido, tracking negativo según tamaño */
+  .display {
+    font-family: var(--font-display);
+    font-stretch: 125%;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+  .display-cond {
+    font-family: var(--font-display);
+    font-stretch: 62%;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* Cinta adhesiva de papel sobre las piezas */
+  .tape {
+    position: relative;
+  }
+  .tape::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: -12px;
+    left: 50%;
+    width: 92px;
+    height: 26px;
+    translate: -50% 0;
+    rotate: var(--tape-rot, -3deg);
+    background:
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.08) 0 2px, transparent 2px 5px),
+      rgb(236 233 226 / 0.62);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    mask: linear-gradient(90deg, transparent 0 2px, #000 2px calc(100% - 2px), transparent calc(100% - 2px));
+    pointer-events: none;
+  }
+
+  /* Trama halftone de fotocopia sobre fotos */
+  .halftone {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgb(14 13 16 / 0.85) 28%, transparent 30%);
+    background-size: 5px 5px;
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+  }
+
+  /* Sombra de papel tintada al fondo, nunca negra pura */
+  .paper-shadow {
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.04),
+      0 18px 40px -12px rgb(5 4 8 / 0.75);
+  }
+
+  /* Material translúcido (aproximación web, no es Liquid Glass oficial) */
+  .glass {
+    background: rgb(23 21 27 / 0.62);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgb(236 233 226 / 0.1);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: var(--color-ink-2);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+  @media (prefers-contrast: more) {
+    .glass {
+      background: var(--color-ink);
+      border-color: var(--color-paper-dim);
+    }
+  }
+}
